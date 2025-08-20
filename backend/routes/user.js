@@ -49,7 +49,7 @@ userRouter.post('/login',async(req, res)=>{
        if (!userExists || userExists.password !== password) {
     return res.status(403).json({ message: "Invalid email or password" });
 }
-        const token = generateToken();
+        const token = generateToken(email);
         res.status(202).json({message:"login succes: "+ token})
     }catch(err){
         console.error(err);
@@ -96,3 +96,8 @@ userRouter.put('/profile/:userID',authMiddleWare,async(req, res)=>{
     await profile.save();
     return res.status()
 }) 
+
+
+module.exports = {
+    userRouter
+}
