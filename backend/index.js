@@ -50,7 +50,7 @@ wss.on('connection', async(socket, req)=>{
         let roomEntry = rooms.find((r)=>{r.roomname ===  roomName});
 
         if(!roomEntry){
-            socket.close(1008, )
+            socket.close(1008, 'Room not found')
         }
 
 

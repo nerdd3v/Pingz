@@ -14,7 +14,7 @@ roomRoute.post('/join',authMiddleWare, async(req, res)=>{
         return res.status(404).json({message:" You are not authorised "})
     }
     if(!RoomName || !RoomOTP){
-        return res.status(404).json({message:"Room name or OTP is missing"})
+        return res.status(404).json({message:"Room name or OTP is missing"});
     }
     const RoomExists = await RoomModel.findOne({RoomName, RoomOTP});
     if(!RoomExists){
