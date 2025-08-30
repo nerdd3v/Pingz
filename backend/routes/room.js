@@ -20,7 +20,7 @@ roomRoute.post('/join',authMiddleWare, async(req, res)=>{
     if(!RoomExists){
         return res.status(404).json({message:"Invalid Room name or Room OTP"})
     }
-    RoomExists.users.push(user.user_id)
+    RoomExists.users.push(user._id)
     await RoomExists.save();
     
     return res.status(202).json({message: "You have successfully entered the room", success:true})
