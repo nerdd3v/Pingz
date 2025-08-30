@@ -1,11 +1,12 @@
-const SECRET = process.env.SECRET
+const SECRET = 'whothehellwasthat'
 const jwt = require('jsonwebtoken')
 const authMiddleWare = (req, res, next)=>{
-    const AuthHeader = req.headers['authorization'];
-    if(!AuthHeader){
-        return res.status(404).json({message:"provide the authorisation header"});
-    }
-    const token = AuthHeader.split(" ")[1];
+    // const AuthHeader = req.headers['authorization'];
+    const {token} = req.body;
+    // if(!AuthHeader){
+    //     return res.status(404).json({message:"provide the authorisation header"});
+    // }
+    // const token = AuthHeader.split(" ")[1];
 
     try {
         const decoded = jwt.verify(token, SECRET);

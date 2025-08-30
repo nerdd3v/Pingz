@@ -7,7 +7,8 @@ const { userRouter } = require('./routes/user');
 const  url  = require('url');
 const jwt = require('jsonwebtoken');
 const { RoomModel } = require('./database/db');
-const SECRET = process.env.SECRET
+const SECRET = 'whothehellwasthat';
+const mongoose = require('mongoose')
 
 const app = express();
 app.use(express.json());
@@ -49,23 +50,42 @@ wss.on('connection', async(socket, req)=>{
 
         let roomEntry = rooms.find(r => r.RoomName === roomName);
 
-        if(!roomEntry){
-            rooms.push({
+       if (!roomEntry) {
+            roomEntry = {
                 RoomName: roomName,
                 sockets: [socket]
-            })
-        }else{
-            roomEntry.sockets = [...roomEntry.sockets, socket]
+            };
+            rooms.push(roomEntry);
+        } else {
+            roomEntry.sockets = [...roomEntry.sockets, socket];
         }
         //okay
 
         //handling the logic for close the websockets
+
+        socket.on('close',()=>{
+            roomEntry.sockets = roomEntry.sockets.filter(s => s !== socket);
+        })
+
+        socket.on('message', (e) => {
+            console.log('Received message:', e);
+            roomEntry.sockets.forEach(s => {
+                if (s !== socket && s.readyState === ws.OPEN) {
+                    console.log('Sending message to socket:', s.id);
+                    s.send(JSON.stringify(e));
+                }
+            });
+        });
+
+        
     } catch (error) {
         console.error('WebSocket error:', error);
         socket.close(1011, 'Internal server error');
     }
 })
 
-server.listen(3000,()=>{
-    console.log("listening on port: ", 3000 )
+mongoose.connect('mongodb+srv://saketsharma448:4buIpW6t8SNXuCVb@mongobasic.nnwkgtx.mongodb.net/').then(()=>{
+    server.listen(3000,()=>{
+        console.log("listening on port: ", 3000 )
+    })
 })
